@@ -49,7 +49,7 @@ class ClusterFind:
 
         # visited = np.full(shape, False, dtype=bool)
         count = 0 # Count of cluster labels used
-        for index in np.ndindex(*shape):
+        for index in np.ndindex(shape):
             # visited[index] = True
             if occupied[index]:
                 # Check the visited neighbors to see if they are 
@@ -157,13 +157,13 @@ class ClusterFind:
         for i in range(rows):
             for j in range(cols):
                 c = self.label[i, j]
-                plt.text(j, i, str(c), va='center', ha='center')
+                plt.text(j, i, str(c), va='center', ha='center', color='white')
         plt.show()
          
 
 if __name__ == "__main__":
     rng = np.random.default_rng()
-    occupied = rng.integers(2, size=(10, 20)) # ones and zeros
+    occupied = rng.integers(2, size=(50, 50)) # ones and zeros
     cf = ClusterFind(occupied)
     cf.find_clusters()
     cf.show2D()
