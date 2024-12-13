@@ -4,15 +4,22 @@ import matplotlib as mpl
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
 import warnings
-# from copy import deepcopy, copy
+
+'''Newman Ziff algorithm for site percolation. O(n) 
+
+Supports calculation of spanning cluster statistics: 
+   fraction of occupied sites in spanning cluster, and number of spanning clusters.'''
 
 
 class SitePercolate():
-    def __init__(self, shape, stats={}):
-        '''shape is the shape of the lattice. The lattice can be square (2D), or cubic (3D).'''
+    def __init__(self, shape, stats={}, show=False):
+        '''shape is the shape of the lattice. The lattice can be square (2D), or cubic (3D).
+        If 'spanning cluster' in stats, efficiently updates spanning cluster 
+        statistics each time a site is occupied.
+        '''
         self.lattice_shape = shape
         self.num_sites = np.prod(shape)
-        self.show = False
+        self.show = show
         if isinstance(stats, str):
             self.stats = {stats}
         else:
@@ -41,7 +48,9 @@ class SitePercolate():
 
     def run(self, show=False):
         '''One run of the Newman Ziff Algorithm.
-        Sites are occupied in random order.'''
+        Sites are occupied in random order.
+        
+        If show is True, displays a visualization (only implemented for 2D lattice)'''
         self.reset()
         # Random permutation of indicies:
         self.rng = rng = np.random.default_rng()
@@ -388,15 +397,15 @@ class SitePercolate():
         im.set_data(im_data)  # Update data
         fig.draw_artist(im)
         # fig.canvas.draw_idle()
-        plt.pause(0.01)  # Pause to allow the user to see it
+        plt.pause(0.001)  # Pause to allow the user to see it
         
         
 if __name__ == "__main__":
-    lattice_shape = (10, 10)
+    lattice_shape = (50, 50)
     sp = SitePercolate(lattice_shape , stats = "spanning cluster")
     stats = sp.run(show=True)
     # Number of sites
-    # N = sp.num_sites
+    N = sp.num_sites
     # Number of spanning clusters
     num_spanning = np.empty(len(stats), dtype=int)
     # Total number of sites in spanning cluster(s), divided by number of occupied sites
